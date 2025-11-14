@@ -1,4 +1,4 @@
-package com.example.yass.users;
+package com.example.yass.users.service;
 
 import com.example.yass.users.dto.UserCreateOrUpdateDto;
 import com.example.yass.users.model.User;

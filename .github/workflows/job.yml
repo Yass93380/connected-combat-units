@@ -3,10 +3,10 @@ name: Job ci-cd pour le projet connected-combat-units
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
   workflow_dispatch:
 
 jobs:
