@@ -1,15 +1,19 @@
 pipeline {
-    agent any
+    agent { 
+        label 'windows'
+    }
+    
+    tools {
+        maven 'Maven'
+    }
+    
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/username/repo.git'
-            }
-        }
         stage('Build') {
             steps {
-                echo 'Building...'
-                // Insert build commands here, -> mvn clean install
+                dir('backend/user-service') {
+                    echo 'Building...'
+                    sh 'mvn clean install'
+                }
             }
         }
         stage('Test') {
