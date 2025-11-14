@@ -1,9 +1,14 @@
 package com.example.yass.users.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 @Table(name="USERS")
 public class User {
 
