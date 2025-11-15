@@ -1,5 +1,7 @@
-package com.example.yass.users.model;
+package com.example.yass.users.model.entity;
 
+import com.example.yass.users.model.enums.MilitaryRank;
+import com.example.yass.users.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

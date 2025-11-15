@@ -1,7 +1,7 @@
-package com.example.yass.users.dto;
+package com.example.yass.users.model.dto;
 
-import com.example.yass.users.model.MilitaryRank;
-import com.example.yass.users.model.UserRole;
+import com.example.yass.users.model.enums.MilitaryRank;
+import com.example.yass.users.model.enums.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 
