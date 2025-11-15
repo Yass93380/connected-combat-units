@@ -15,6 +15,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.5.7</spring.boot.version>
         <lombok.version>1.18.42</lombok.version>
+        <github.owner>Yass93380</github.owner>
+        <github.repository>connected-combat-units</github.repository>
+        <github.packages.url>https://maven.pkg.github.com</github.packages.url>
     </properties>
 
     <dependencyManagement>
@@ -85,5 +88,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>Github packages repository</name>
+            <url>${github.packages.url}/${github.owner}/${github.repository}</url>
+        </repository>
+    </distributionManagement>
 
 </project>
