@@ -53,8 +53,8 @@ public class UserService {
         userRepository.deleteAll();
     }
 
-    public User getUser(UUID id) {
-        return userRepository.findById(id).orElseThrow();
+    public User getUser(String id) {
+        return userRepository.findById(UUID.fromString(id)).orElseThrow();
     }
 
     public Set<User> getAllUsers() {

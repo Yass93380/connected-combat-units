@@ -53,12 +53,23 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- JAXB serialization/deserialization, validation XML/XSD-->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
         </dependency>
 
         <!-- Testing -->
@@ -82,13 +93,38 @@
 
     <build>
         <plugins>
+            <!-- SpringBoot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <!-- Generate Source with JAXB -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>xsd_to_Java</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sources>
+                        <source>${project.basedir}/src/main/resources/xsd_schemas/users.xsd</source>
+                    </sources>
+                    <packageName>com.example.yass.generated.model</packageName>
+                    <outputDirectory>${project.build.directory}/generated-sources/jaxb</outputDirectory>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
+    <!-- Deploiement sur Github Packages -->
     <distributionManagement>
         <repository>
             <id>github</id>
