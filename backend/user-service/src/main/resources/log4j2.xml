@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="LOGS_DIRECTORY">logs</Property>
+        <Property name="MAX_FILE_SIZE">5MB</Property>
+        <Property name="MAX_BACKUP_FILES">5</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- Fichier avec rotation -->
+        <RollingFile name="FileAppender"
+                     fileName="${LOGS_DIRECTORY}/app.log"
+                     filePattern="${LOGS_DIRECTORY}/app-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <!-- Rotation par taille et par date -->
+                <SizeBasedTriggeringPolicy size="${MAX_FILE_SIZE}"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${MAX_BACKUP_FILES}"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- LOGGER APPLICATIF -->
+        <Logger name="com.example.yass.users" level="debug" additivity="false">
+            <AppenderRef ref="FileAppender"/>
+        </Logger>
+
+        <!-- Root logger -->
+        <Root level="info">
+            <AppenderRef ref="FileAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>
