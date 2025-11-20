@@ -53,6 +53,10 @@ public class UserService {
         userRepository.deleteAll();
     }
 
+    public void deleteUser(String name, MilitaryRank militaryRank) {
+        userRepository.deleteUserByNameAndMilitaryRank(name, militaryRank);
+    }
+
     public User getUser(String id) {
         return userRepository.findById(UUID.fromString(id)).orElseThrow();
     }

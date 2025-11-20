@@ -1,0 +1,24 @@
+services:
+  application-user-service:
+    build: ./backend/user-service # Path to the Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    volumes:
+        - ./backend/user-service/logs:/logs
+    depends_on:
+      - database-user-service
+
+  database-user-service:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: users-service-db
+      POSTGRES_USER: postgres 
+      POSTGRES_PASSWORD: admin # DEV only
+    ports:
+        - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+volumes:
+  pgdata:

@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity<String> createUsers(@RequestParam(name = "file") MultipartFile file) {
+    public ResponseEntity<String> createUsersFromFile(@RequestParam(name = "file") MultipartFile file) {
 
         try (InputStream xmlInput = file.getInputStream();
              InputStream xsdInput = new ClassPathResource("/xsd_schemas/users.xsd").getInputStream()) {
@@ -82,5 +82,14 @@ public class UserController {
 
 
         return ResponseEntity.ok("Le fichier \"" + file.getOriginalFilename() + "\" a bien été uploadé.");
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteUser(@Valid @RequestBody UserCreateOrUpdateDto dto) {
+        // suppression silencieuse, on supprime que le User existe ou pas
+
+        String name = dto.getName();
+        userService.deleteUser(name, dto.getRank());
+        return ResponseEntity.ok("L\'utilisateur " + name + " a bien été supprimé s\'il existe.");
     }
 }

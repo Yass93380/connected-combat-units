@@ -1,0 +1,12 @@
+# Image Java
+FROM eclipse-temurin:17-jdk-alpine
+
+# Copie le .jar à la racine du conteneur docker
+ARG JAR_FILE=target/user-service-1.0.0-SNAPSHOT.jar
+COPY ${JAR_FILE} user-service.jar
+
+# Expose le port 8080 de l'application
+EXPOSE 8080
+
+# Lancement de l'application
+ENTRYPOINT ["java", "-jar", "/user-service.jar"]
