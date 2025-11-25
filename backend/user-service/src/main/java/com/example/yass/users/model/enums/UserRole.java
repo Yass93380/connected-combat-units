@@ -18,6 +18,15 @@ public enum UserRole {
         this.permissions = permissions;
     }
 
+    public static UserRole fromString(String frenchRole) {
+        return switch (frenchRole) {
+            case "administrateur" -> ADMIN;
+            case "hiérarchie" -> HIERARCHY;
+            case "utilisateur" -> USER;
+            default -> throw new IllegalArgumentException("Le rang militaire " + frenchRole + "est inconnu.");
+        };
+    }
+
     private enum Permission {
         READ,
         WRITE,

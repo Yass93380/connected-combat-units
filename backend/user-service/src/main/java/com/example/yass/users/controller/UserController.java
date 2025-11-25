@@ -68,8 +68,8 @@ public class UserController {
                 // xml to objet Java
                 Users users = (Users) unmarshaller.unmarshal(xmlInput);
                 Set<UserCreateOrUpdateDto> usersEntity = users.getUser().stream().map(user ->
-                        new UserCreateOrUpdateDto(null, user.getName(), MilitaryRank.valueOf(user.getRank()),
-                                UserRole.valueOf(user.getRole()))).collect(Collectors.toSet());
+                        new UserCreateOrUpdateDto(null, user.getName(), MilitaryRank.fromString(user.getRank()),
+                                UserRole.fromString(user.getRole()))).collect(Collectors.toSet());
 
                 userService.createAllUsers(usersEntity);
             }
@@ -91,5 +91,12 @@ public class UserController {
         String name = dto.getName();
         userService.deleteUser(name, dto.getRank());
         return ResponseEntity.ok("L\'utilisateur " + name + " a bien été supprimé s\'il existe.");
+    }
+
+    @DeleteMapping("/delete/all")
+    public ResponseEntity<String> deleteAllUsers() {
+        userService.deleteAllUsers();
+
+        return ResponseEntity.ok("Les utilisateurs ont bien été supprimés.");
     }
 }

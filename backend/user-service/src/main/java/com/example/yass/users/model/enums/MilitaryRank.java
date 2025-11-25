@@ -16,4 +16,13 @@ public enum MilitaryRank {
         this.frenchRank = frenchRank;
         this.numericRank = numericRank;
     }
+
+    public static MilitaryRank fromString(String frenchRank) {
+        return switch (frenchRank) {
+            case "soldat" -> SOLDIER;
+            case "officier" -> OFFICER;
+            case "état-major" -> SENIOR_OFFICER;
+            default -> throw new IllegalArgumentException("Le rang militaire " + frenchRank + "est inconnu.");
+        };
+    }
 }
