@@ -1,9 +1,12 @@
 package com.example.yass.users.service;
 
-import com.example.yass.users.model.dto.UserCreateOrUpdateDto;
-import com.example.yass.users.model.enums.MilitaryRank;
+import com.example.yass.users.model.dto.UserDto;
 import com.example.yass.users.model.entity.User;
+import com.example.yass.users.model.enums.MilitaryRank;
 import com.example.yass.users.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -11,14 +14,14 @@ import java.util.Set;
 import java.util.UUID;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User createUser(UserCreateOrUpdateDto userDto) {
+    public User createUser(UserDto userDto) {
         User user = new User();
 
         user.setName(userDto.getName());
@@ -32,16 +35,17 @@ public class UserService {
         userRepository.deleteUserByNameAndMilitaryRank(name, rank);
     }
 
-    public Set<User> createAllUsers(Set<UserCreateOrUpdateDto> users) {
+    public Set<User> createAllUsers(Set<UserDto> users) {
 
         final Set<User> usersToSave = new HashSet<>();
 
-        for(UserCreateOrUpdateDto userDto: users) {
+        for(UserDto userDto: users) {
             User user = new User();
 
             user.setRole(userDto.getRole());
             user.setName(userDto.getName());
             user.setMilitaryRank(userDto.getRank());
+            user.setPassword(userDto.getPassword());
 
             usersToSave.add(user);
         }
@@ -63,5 +67,14 @@ public class UserService {
 
     public Set<User> getAllUsers() {
         return new HashSet<>(userRepository.findAll());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        User user = userRepository.findUserByName(username).orElseThrow(() -> new UsernameNotFoundException("l'utilisateur n'éxiste pas."));
+
+        return org.springframework.security.core.userdetails.User.builder().username(user.getName())
+                .password(user.getPassword()).authorities(user.getAuthorities()).build();
     }
 }

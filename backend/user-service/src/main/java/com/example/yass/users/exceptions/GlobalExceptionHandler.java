@@ -9,17 +9,12 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private record Error(int code, String message){}
+    public record Error(int code, String message){}
 
     @ExceptionHandler(exception = NoHandlerFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public Error resourceNotFound() {
-        return new Error(404, "L\'URL demandée n\'éxiste pas.");
+    public Error resourceNotFound(NoHandlerFoundException ex) {
+        return new Error(404, "L'URL demandée n'éxiste pas.");
     }
 
-    @ExceptionHandler(exception = Exception.class)
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    public Error internalServerError() {
-        return new Error(500, "Erreur interne.");
-    }
 }

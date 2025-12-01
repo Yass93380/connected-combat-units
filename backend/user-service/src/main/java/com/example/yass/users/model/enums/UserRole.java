@@ -27,7 +27,7 @@ public enum UserRole {
         };
     }
 
-    private enum Permission {
+    public enum Permission {
         READ,
         WRITE,
         CREATE,

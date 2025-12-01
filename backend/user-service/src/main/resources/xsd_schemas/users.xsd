@@ -10,6 +10,7 @@
                             <xs:element name="name" type="xs:string"/>
                             <xs:element name="rank" type="xs:string"/>
                             <xs:element name="role" type="xs:string"/>
+                            <xs:element name="password" type="xs:string"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

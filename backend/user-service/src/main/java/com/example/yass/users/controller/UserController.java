@@ -1,7 +1,7 @@
 package com.example.yass.users.controller;
 
 import com.example.yass.generated.model.Users;
-import com.example.yass.users.model.dto.UserCreateOrUpdateDto;
+import com.example.yass.users.model.dto.UserDto;
 import com.example.yass.users.model.entity.User;
 import com.example.yass.users.model.enums.MilitaryRank;
 import com.example.yass.users.model.enums.UserRole;
@@ -12,6 +12,8 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
@@ -30,28 +32,37 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordEncoder encoder;
 
-    UserController(UserService userService) {
+    UserController(UserService userService, PasswordEncoder encoder) {
         this.userService = userService;
+        this.encoder = encoder;
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'HIERARCHY', 'USER')")
     public ResponseEntity<Set<User>> users() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HIERARCHY', 'USER')")
     public ResponseEntity<User> user(@PathVariable(name = "id") String id) {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
     @PostMapping
-    public ResponseEntity<Set<User>> createUsers(@Valid @RequestBody Set<UserCreateOrUpdateDto> usersDto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Set<User>> createUsers(@Valid @RequestBody Set<UserDto> usersDto) {
         return ResponseEntity.ok(userService.createAllUsers(usersDto));
     }
 
     @PostMapping("/import")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HIERARCHY')")
     public ResponseEntity<String> createUsersFromFile(@RequestParam(name = "file") MultipartFile file) {
+
+        // vider la BD des users existants
+        userService.deleteAllUsers();
 
         try (InputStream xmlInput = file.getInputStream();
              InputStream xsdInput = new ClassPathResource("/xsd_schemas/users.xsd").getInputStream()) {
@@ -65,11 +76,11 @@ public class UserController {
                 Schema schema = schemaFactory.newSchema(new StreamSource(xsdInput));
                 unmarshaller.setSchema(schema);
 
-                // xml to objet Java
+                // fichier xml to objets Java
                 Users users = (Users) unmarshaller.unmarshal(xmlInput);
-                Set<UserCreateOrUpdateDto> usersEntity = users.getUser().stream().map(user ->
-                        new UserCreateOrUpdateDto(null, user.getName(), MilitaryRank.fromString(user.getRank()),
-                                UserRole.fromString(user.getRole()))).collect(Collectors.toSet());
+                Set<UserDto> usersEntity = users.getUser().stream().map(user ->
+                    new UserDto(null, user.getName(), encoder.encode(user.getPassword()), MilitaryRank.fromString(user.getRank()),
+                            UserRole.fromString(user.getRole()))).collect(Collectors.toSet());
 
                 userService.createAllUsers(usersEntity);
             }
@@ -85,15 +96,17 @@ public class UserController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@Valid @RequestBody UserCreateOrUpdateDto dto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteUser(@Valid @RequestBody UserDto dto) {
         // suppression silencieuse, on supprime que le User existe ou pas
 
         String name = dto.getName();
         userService.deleteUser(name, dto.getRank());
-        return ResponseEntity.ok("L\'utilisateur " + name + " a bien été supprimé s\'il existe.");
+        return ResponseEntity.ok("L'utilisateur " + name + " a bien été supprimé s'il existe.");
     }
 
     @DeleteMapping("/delete/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteAllUsers() {
         userService.deleteAllUsers();
 
