@@ -17,6 +17,9 @@ public class Unit {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(name = "MUNITIONS")
+    private long munitions;
+
     @Embedded
     private GpsCoordinates gpsCoordinates;
 
