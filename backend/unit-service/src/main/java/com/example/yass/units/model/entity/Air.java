@@ -2,9 +2,9 @@ package com.example.yass.units.model.entity;
 
 import com.example.yass.units.model.enums.AirType;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import java.util.List;
 @Table(name = "AIR")
 @Getter
 @Setter
-@Builder
-public class Air {
+@SuperBuilder
+public class Air extends Unit {
 
     @Column(name = "TYPE")
     private AirType airType;

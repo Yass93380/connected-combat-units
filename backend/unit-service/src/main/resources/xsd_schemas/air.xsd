@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Définition du type airUnit - AirUnitType -->
+    <xs:complexType name="AirUnitType">
+        <xs:sequence>
+            <xs:element name="airType" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="status" type="xs:string"/>
+            <xs:element name="munitions" type="xs:string"/>
+            <xs:element name="speed" type="xs:string"/>
+            <xs:element name="latitude" type="xs:string"/>
+            <xs:element name="longitude" type="xs:string"/>
+            <xs:element name="altitude" type="xs:string"/>
+
+            <!-- Liste des subordonnés -->
+            <xs:element name="subordinates" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="airUnit" type="AirUnitType" maxOccurs="10"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="airUnits">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="airUnit" type="AirUnitType" maxOccurs="50"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

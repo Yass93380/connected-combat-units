@@ -2,9 +2,9 @@ package com.example.yass.units.model.entity;
 
 import com.example.yass.units.model.enums.CavalryType;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -12,20 +12,20 @@ import java.util.List;
 @Table(name = "CAVALRY")
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 public class Cavalry extends Unit {
 
     @Column(name = "TYPE")
     @Enumerated(EnumType.STRING)
     private CavalryType type;
 
-    @Column(name = "OPERATOR_NUMBER")
+    @Column(name = "OPERATOR_NUMBER", nullable = false)
     private int operator_number;
 
-    @Column(name = "CALIBRE")
+    @Column(name = "CALIBRE", nullable = false)
     private int calibre;
 
-    @Column(name = "ARMOUR") // blindage.
+    @Column(name = "ARMOUR", nullable = false) // blindage.
     private int armour;
 
     @OneToMany

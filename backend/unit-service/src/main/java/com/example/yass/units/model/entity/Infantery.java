@@ -3,9 +3,9 @@ package com.example.yass.units.model.entity;
 import com.example.yass.units.model.enums.InfanteryWeapon;
 import com.example.yass.units.model.enums.MilitaryRank;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "INFANTERY")
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 public class Infantery extends Unit {
 
     @Column(name = "NAME")
